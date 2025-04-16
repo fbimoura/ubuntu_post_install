@@ -71,3 +71,8 @@ Esse script realiza:
 ```ini
 [local]
 localhost ansible_connection=local
+```
+
+---
+
+📝 *README documentado com apoio do [ChatGPT da OpenAI](https://openai.com/chatgpt)*
