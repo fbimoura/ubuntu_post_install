@@ -1,101 +1,73 @@
-📘 README.md – Automação de Ambiente Dev com Ansible
-🔧 Visão Geral
-Este repositório contém um conjunto de roles Ansible que automatizam a instalação e configuração de um ambiente completo para desenvolvimento com:
+# 🚀 Ambiente Dev Automático com Ansible (Ubuntu 22.04)
 
-Virtualização (KVM)
+Este projeto automatiza a configuração de um ambiente de desenvolvimento completo usando Ansible no Ubuntu 22.04. Ele inclui:
 
-Containers (Podman)
+- Virtualização com KVM
+- Containerização com Podman
+- Kubernetes local com Minikube
+- Shell Zsh com Oh My Zsh
+- Pós-instalação com otimizações
 
-Kubernetes local (Minikube)
+---
 
-Terminal aprimorado (Zsh + Oh My Zsh)
+## 📦 Roles incluídas
 
-Pós-instalação e personalização do Ubuntu
+| Role             | Descrição                                                                 |
+|------------------|---------------------------------------------------------------------------|
+| `post_install`   | Ações pós-instalação: atualizações, timezone, repositórios e utilitários. |
+| `kvm_setup`      | Instala e configura o KVM, libvirt e virt-manager.                        |
+| `podman_setup`   | Instala Podman, cockpit-podman e configura o serviço na porta 9095.       |
+| `minikube_setup` | Instala Minikube, Helm, kubectl, configura driver Podman e cria serviço. |
+| `zsh_setup`      | Instala Zsh, Oh My Zsh, plugins e autocompletes para ferramentas K8s.     |
 
-📦 Roles incluídas
+---
 
-Role	Descrição
-post_install	Ações pós-instalação do Ubuntu 22.04 (atualizações, timezone, utilitários).
-kvm_setup	Instala e configura o KVM, libvirt e virt-manager.
-podman_setup	Instala Podman, cockpit-podman e configura porta customizada.
-minikube_setup	Instala Minikube, kubectl, Helm, configura driver Podman e cria serviço systemd.
-zsh_setup	Instala Zsh, Oh My Zsh, plugins, tema e autocompletes para ferramentas Kubernetes.
-📋 Pré-requisitos
-Ubuntu 22.04 instalado
+## 🖥️ Pré-requisitos
 
-Execução local com permissões de sudo
+- Ubuntu 22.04 com acesso root
+- Conexão com a Internet
+- Permissões para executar `sudo`
 
-Conectividade com a Internet
+---
 
-🚀 Inicialização
-Execute o script post-install.sh para:
+## ⚙️ Inicialização do ambiente
 
-Criar o usuário ansible com acesso via chave SSH
+### 1. Torne o script `post-install.sh` executável
 
-Conceder sudo sem senha
-
-Instalar o Ansible via PPA oficial
-
-Criar inventário local com localhost
-
-Gerar ~/.ansible.cfg com caminho customizado das roles
-
-Executar automaticamente o playbook principal config-ubuntu.yaml
-
-bash
-Copiar
-Editar
+```bash
 chmod +x post-install.sh
-./post-install.sh
-O post-install.sh executa ao final o comando:
+sh post-install.sh
+```
+Esse script realiza:
 
-bash
-Copiar
-Editar
-ansible-playbook config-ubuntu.yaml
-🧪 Inventário gerado (./hosts)
-ini
-Copiar
-Editar
+- Criação do usuário ansible
+- Geração da chave SSH
+- Configuração de sudo sem senha
+- Instalação do Ansible via PPA
+- Criação de ~/.ansible.cfg
+- Geração do inventário local (hosts)
+- Execução automática do playbook config-ubuntu.yaml
+
+---
+
+## 📁 Estrutura esperada do projeto
+```text 
+  .
+  ├── post-install.sh
+  ├── config-ubuntu.yaml \
+  ├── hosts
+  ├── roles/
+  │ ├── post_install/
+  │ ├── kvm_setup/
+  │ ├── podman_setup/
+  │ ├── minikube_setup/
+  │ └── zsh_setup/
+  └── README.md
+```
+
+---
+
+## 🧾 Inventário (hosts)
+```ini
 [local]
 localhost ansible_connection=local
-📄 Exemplo de playbook (config-ubuntu.yaml)
-yaml
-Copiar
-Editar
-- hosts: local
-  become: true
-  roles:
-    - post_install
-    - kvm_setup
-    - podman_setup
-    - minikube_setup
-    - zsh_setup
-🧠 Recursos configurados
-Cockpit escutando na porta 9095
-
-Minikube utilizando Podman como driver, com serviço systemd
-
-Zsh como shell padrão com:
-
-Oh My Zsh (tema agnoster)
-
-Plugins: zsh-autosuggestions, zsh-syntax-highlighting
-
-Autocompletes: kubectl, minikube, helm
-
-📂 Estrutura esperada
-arduino
-Copiar
-Editar
-.
-├── post-install.sh
-├── config-ubuntu.yaml
-├── hosts
-├── roles/
-│   ├── post_install/
-│   ├── kvm_setup/
-│   ├── podman_setup/
-│   ├── minikube_setup/
-│   └── zsh_setup/
-└── README.md
