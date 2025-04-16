@@ -1,0 +1,2 @@
+---
+minikube_user: "{{ usuario_pessoal }}"

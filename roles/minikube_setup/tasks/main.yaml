@@ -1,0 +1,46 @@
+---
+- name: Instala dependências básicas
+  ansible.builtin.apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+    state: present
+    update_cache: true
+
+- name: Instala kubectl e helm
+  ansible.builtin.include_tasks:
+    file: "{{ item }}"
+  loop:
+    - install_kubectl.yaml
+    - install_helm.yaml
+
+- name: Instala o Minikube
+  ansible.builtin.get_url:
+    url: https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+    dest: /usr/local/bin/minikube
+    mode: '0755'
+
+- name: Garante diretório de configuração local
+  ansible.builtin.file:
+    path: "/home/{{ minikube_user }}/.minikube"
+    state: directory
+    owner: "{{ minikube_user }}"
+    group: "{{ minikube_user }}"
+    mode: '0755'
+
+- name: Define Podman como driver padrão
+  ansible.builtin.command: >
+    minikube config set driver podman
+  become: false
+  environment:
+    HOME: "/home/{{ minikube_user }}"
+  args:
+    creates: "/home/{{ minikube_user }}/.minikube/config/config.json"
+
+- name: Adiciona aliases úteis ao bash
+  ansible.builtin.template:
+    src: bash_aliases.j2
+    dest: "/home/{{ minikube_user }}/.bash_aliases"
+    owner: "{{ minikube_user }}"
+    group: "{{ minikube_user }}"
+    mode: '0644'

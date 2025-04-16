@@ -1,0 +1,21 @@
+---
+- name: Adiciona chave GPG do repositório do Lens
+  ansible.builtin.shell: |
+    curl -fsSL https://downloads.k8slens.dev/keys/gpg | gpg --dearmor | tee /usr/share/keyrings/lens-archive-keyring.gpg > /dev/null
+  args:
+    creates: /usr/share/keyrings/lens-archive-keyring.gpg
+
+- name: Adiciona repositório do Lens
+  ansible.builtin.apt_repository:
+    repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/lens-archive-keyring.gpg] https://downloads.k8slens.dev/apt/debian stable main"
+    filename: lens
+    state: present
+
+- name: Atualiza cache do APT
+  ansible.builtin.apt:
+    update_cache: yes
+
+- name: Instala o Lens
+  ansible.builtin.apt:
+    name: lens
+    state: present

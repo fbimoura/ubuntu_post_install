@@ -1,0 +1,22 @@
+---
+- name: Configura meu SO
+  hosts: localhost
+  connection: local
+  become: true
+  vars:
+    usuario_pessoal: nome_usuario # Nome do seu usuário
+  
+  pre_tasks:
+    - ansible.builtin.debug:
+        msg: "Iniciando a configuração da estação de trabalho"
+    
+  roles:
+    - post-install
+    - podman_setup
+    - kvm_setup
+    - minikube_setup
+    - zsh_setup
+
+  post_tasks:
+    - ansible.builtin.debug:
+        msg: "Concluída a configuração da estação de trabalho"

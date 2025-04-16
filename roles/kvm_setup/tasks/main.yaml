@@ -1,0 +1,42 @@
+---
+- name: Instala pacotes KVM e ferramentas
+  ansible.builtin.apt:
+    name: "{{ kvm_packages }}"
+    state: present
+    update_cache: true
+
+- name: Verifica se o sistema suporta virtualização
+  ansible.builtin.command: grep -E --color 'vmx|svm' /proc/cpuinfo
+  register: cpu_virtualization
+  changed_when: false
+  failed_when: cpu_virtualization.rc != 0
+
+- name: Adiciona usuário ao grupo libvirt
+  ansible.builtin.user:
+    name: "{{ kvm_user }}"
+    groups: libvirt
+    append: yes
+
+- name: Habilita e inicia o serviço libvirtd
+  ansible.builtin.systemd:
+    name: libvirtd
+    enabled: true
+    state: started
+
+- name: Garante que o serviço está escutando no socket
+  ansible.builtin.systemd:
+    name: libvirtd.socket
+    enabled: true
+    state: started
+
+- name: Ativa a rede padrão do libvirt (se necessário)
+  ansible.builtin.command: virsh net-autostart default
+  register: net_auto
+  changed_when: "'already active' not in net_auto.stdout"
+  failed_when: false
+
+- name: Inicia rede default do libvirt
+  ansible.builtin.command: virsh net-start default
+  register: net_start
+  changed_when: "'started' in net_start.stdout"
+  failed_when: false

@@ -1,0 +1,17 @@
+---
+- name: Instala pacotes via apt
+  ansible.builtin.apt:
+    name: "{{ packages_apt }}"
+    state: present
+
+- name: Garante que snapd está instalado
+  ansible.builtin.apt:
+    name: snapd
+    state: present
+
+- name: Instala pacotes snap
+  community.general.snap:
+    name: "{{ item.name }}"
+    classic: "{{ item.classic | default(false) }}"
+    state: present
+  loop: "{{ packages_snap }}"

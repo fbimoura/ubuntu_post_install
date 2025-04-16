@@ -1,0 +1,17 @@
+---
+- name: Adiciona chave GPG do Helm
+  ansible.builtin.apt_key:
+    url: https://baltocdn.com/helm/signing.asc
+    state: present
+
+- name: Adiciona repositório Helm
+  ansible.builtin.apt_repository:
+    repo: deb https://baltocdn.com/helm/stable/debian/ all main
+    state: present
+    filename: helm
+
+- name: Instala o Helm
+  ansible.builtin.apt:
+    name: helm
+    state: present
+    update_cache: yes

@@ -1,0 +1,25 @@
+---
+- name: Instala Podman e cockpit
+  ansible.builtin.apt:
+    name: "{{ podman_packages }}"
+    state: present
+    update_cache: true
+
+- name: Cria diretório de configuração global do Podman
+  ansible.builtin.file:
+    path: /etc/containers
+    state: directory
+    mode: '0755'
+
+- name: Cria storage.conf
+  ansible.builtin.template:
+    src: storage.conf.j2
+    dest: /etc/containers/storage.conf
+    mode: '0644'
+
+- name: Habilita cockpit.socket
+  ansible.builtin.systemd:
+    name: cockpit.socket
+    enabled: true
+    state: started
+  notify: Restart cockpit

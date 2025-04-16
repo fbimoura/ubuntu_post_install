@@ -1,0 +1,29 @@
+timezone: America/Sao_Paulo
+locale: pt_BR.UTF-8
+
+packages_apt:
+  - code
+  - firefox
+  - firefox-locale-br
+  - wget
+  - curl
+  - vlc
+  - flameshot
+  - htop
+  - terminator
+  - vim
+  - git
+  - net-tools
+  - gnupg
+  - software-properties-common
+  - yamllint
+  - gnome-tweaks
+
+packages_snap:
+  - name: bitwarden
+    classic: true
+  - name: drawio
+  - name: spotify
+    classic: true
+  - name: discord
+    classic: true

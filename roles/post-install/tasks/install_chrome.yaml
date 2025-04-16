@@ -1,0 +1,14 @@
+---
+- name: Baixar Google Chrome .deb
+  ansible.builtin.get_url:
+    url: https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+    dest: /tmp/google-chrome.deb
+
+- name: Instalar Google Chrome
+  ansible.builtin.apt:
+    deb: /tmp/google-chrome.deb
+
+- name: Remover instalador .deb
+  ansible.builtin.file:
+    path: /tmp/google-chrome.deb
+    state: absent

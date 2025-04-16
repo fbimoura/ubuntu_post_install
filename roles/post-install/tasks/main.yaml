@@ -1,0 +1,29 @@
+---
+- name: Atualiza o sistema
+  ansible.builtin.apt:
+    update_cache: yes
+    upgrade: dist
+    cache_valid_time: 3600
+
+- name: Incluindo tasks de instalação de pacotes
+  ansible.builtin.include_tasks:
+    file: "{{ item }}"
+  loop:
+    - install_pkg.yaml
+    - install_chrome.yaml
+    - install_lens.yaml
+
+- name: Define timezone
+  community.general.timezone:
+    name: "{{ timezone }}"
+
+- name: Garante locale do sistema
+  ansible.builtin.locale_gen:
+    name: "{{ locale }}"
+    state: present
+
+- name: Aplica bashrc customizado (global)
+  ansible.builtin.copy:
+    src: custom_bashrc.sh
+    dest: /etc/profile.d/custom_bashrc.sh
+    mode: '0755'

@@ -1,0 +1,7 @@
+---
+podman_packages:
+  - podman
+  - cockpit
+  - cockpit-podman
+
+podman_user: "{{ usuario_pessoal }}"
